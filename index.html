@@ -158,13 +158,13 @@
             <div class="countdown" id="countdown">00:00</div>
             
             <div class="btn-group">
-                <a href="#" class="btn" onclick="setTimer(25)">25分钟</a>
-                <a href="#" class="btn" onclick="setTimer(10)">10分钟</a>
-                <a href="#" class="btn" onclick="setTimer(5)">5分钟</a>
+                <a href="javascript:void(setTimer(25))" class="btn">25分钟</a>
+                <a href="javascript:void(setTimer(10))" class="btn">10分钟</a>
+                <a href="javascript:void(setTimer(5))" class="btn">5分钟</a>
             </div>
             
             <div>
-                <a href="#" class="btn control" onclick="toggleTimer()">开始/停止</a>
+                <a href="javascript:void(toggleTimer())" class="btn control">开始/停止</a>
             </div>
         </div>
     </div>
@@ -200,14 +200,16 @@
         var isRunning = false;
 
         function setTimer(minutes) {
+            console.log('Setting timer to ' + minutes + ' minutes');
             stopTimer();
             remainingTime = minutes * 60;
             updateCountdown();
+            document.getElementById('countdown').textContent = 
+                String(minutes).padStart(2, '0') + ':00';
         }
 
         function toggleTimer() {
             if (remainingTime <= 0) {
-                alert('请先选择时间！');
                 return;
             }
             
@@ -239,9 +241,12 @@
         function updateCountdown() {
             var minutes = Math.floor(remainingTime / 60);
             var seconds = remainingTime % 60;
-            document.getElementById('countdown').textContent = 
-                String(minutes).padStart(2, '0') + ':' + 
-                String(seconds).padStart(2, '0');
+            var display = String(minutes).padStart(2, '0') + ':' + 
+                         String(seconds).padStart(2, '0');
+            var element = document.getElementById('countdown');
+            if (element.textContent !== display) {
+                element.textContent = display;
+            }
         }
 
         // 初始化
