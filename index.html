@@ -157,7 +157,7 @@
         <div class="timer-section">
             <div class="countdown" id="countdown">25:00</div>
             <div>
-                <a href="#start" id="timerButton" class="btn">开始</a>
+                <a href="?action=toggle" class="btn" id="timerButton">开始</a>
             </div>
         </div>
     </div>
@@ -187,66 +187,63 @@
                 year + '年' + month + '月' + day + '日 星期' + weekDay;
         }
 
-        // 重写计时器相关代码
+        // 新的计时器实现
+        var timeLeft = 1500; // 25分钟 = 1500秒
+        var timerRunning = false;
         var timerInterval;
-        var remainingTime = 25 * 60;
-        var isRunning = false;
+        var button = document.getElementById('timerButton');
+        var display = document.getElementById('countdown');
 
-        // 监听 URL hash 变化
-        window.onhashchange = function() {
-            handleTimerAction();
+        // 更新显示
+        function updateTimer() {
+            var minutes = Math.floor(timeLeft / 60);
+            var seconds = timeLeft % 60;
+            display.textContent = 
+                (minutes < 10 ? '0' : '') + minutes + ':' + 
+                (seconds < 10 ? '0' : '') + seconds;
         }
 
-        function handleTimerAction() {
-            var hash = window.location.hash;
-            if (hash === '#start') {
-                startTimer();
-                document.getElementById('timerButton').href = '#stop';
-                document.getElementById('timerButton').textContent = '停止';
-            } else {
-                stopTimer();
-                document.getElementById('timerButton').href = '#start';
-                document.getElementById('timerButton').textContent = '开始';
-            }
-        }
-
-        function startTimer() {
-            if (remainingTime <= 0) {
-                remainingTime = 25 * 60;
-            }
-            isRunning = true;
-            timerInterval = setInterval(function() {
-                remainingTime--;
-                if (remainingTime < 0) {
-                    stopTimer();
-                    alert('时间到！');
-                    remainingTime = 25 * 60;
-                    window.location.hash = ''; // 重置 hash
+        // 处理按钮点击
+        button.onclick = function(e) {
+            e.preventDefault();
+            
+            if (!timerRunning) {
+                // 开始计时
+                timerRunning = true;
+                button.textContent = '停止';
+                
+                if (timeLeft <= 0) {
+                    timeLeft = 1500;
                 }
-                updateCountdown();
-            }, 1000);
-        }
-
-        function stopTimer() {
-            isRunning = false;
-            clearInterval(timerInterval);
-        }
-
-        function updateCountdown() {
-            var minutes = Math.floor(remainingTime / 60);
-            var seconds = remainingTime % 60;
-            document.getElementById('countdown').textContent = 
-                String(minutes).padStart(2, '0') + ':' + 
-                String(seconds).padStart(2, '0');
-        }
+                
+                timerInterval = setInterval(function() {
+                    timeLeft--;
+                    updateTimer();
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        timerRunning = false;
+                        button.textContent = '开始';
+                        alert('时间到！');
+                        timeLeft = 1500;
+                        updateTimer();
+                    }
+                }, 1000);
+                
+            } else {
+                // 停止计时
+                clearInterval(timerInterval);
+                timerRunning = false;
+                button.textContent = '开始';
+            }
+            
+            return false;
+        };
 
         // 初始化
         setInterval(updateClock, 60000);
         updateClock();
-        updateCountdown();
-        
-        // 初始化按钮状态
-        handleTimerAction();
+        updateTimer();
     </script>
 </body>
 </html> 
