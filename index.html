@@ -156,8 +156,9 @@
         
         <div class="timer-section">
             <div class="countdown" id="countdown">25:00</div>
-            <div>
-                <a href="?action=toggle" class="btn" id="timerButton">开始</a>
+            <div style="display: flex; justify-content: center; gap: 20px;">
+                <a href="#" class="btn" id="timerButton">开始</a>
+                <a href="#" class="btn" id="resetButton" style="background: #95a5a6;">重置</a>
             </div>
         </div>
     </div>
@@ -192,6 +193,7 @@
         var timerRunning = false;
         var timerInterval;
         var button = document.getElementById('timerButton');
+        var resetBtn = document.getElementById('resetButton');
         var display = document.getElementById('countdown');
 
         // 更新显示
@@ -203,12 +205,27 @@
                 (seconds < 10 ? '0' : '') + seconds;
         }
 
-        // 处理按钮点击
+        // 重置功能
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            timeLeft = 1500;
+            button.textContent = '开始';
+            updateTimer();
+        }
+
+        // 重置按钮事件
+        resetBtn.onclick = function(e) {
+            e.preventDefault();
+            resetTimer();
+            return false;
+        };
+
+        // 开始/停止按钮事件
         button.onclick = function(e) {
             e.preventDefault();
             
             if (!timerRunning) {
-                // 开始计时
                 timerRunning = true;
                 button.textContent = '停止';
                 
@@ -231,7 +248,6 @@
                 }, 1000);
                 
             } else {
-                // 停止计时
                 clearInterval(timerInterval);
                 timerRunning = false;
                 button.textContent = '开始';
