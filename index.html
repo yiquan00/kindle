@@ -17,12 +17,14 @@
         }
         
         .clock {
-            font-size: 72px;
+            /* 增大时钟字体 */
+            font-size: 144px;
             margin: 40px 0;
         }
         
         .date {
-            font-size: 36px;
+            /* 增大日期字体 */
+            font-size: 72px;
             margin-bottom: 60px;
         }
         
@@ -58,7 +60,12 @@
             currentTime += 1000; // 每次加1秒
             
             var date = new Date(currentTime);
-            var h = date.getHours();
+            // 添加8小时的时差
+            var h = date.getHours() + 8;
+            // 处理超过24小时的情况
+            if (h >= 24) {
+                h = h - 24;
+            }
             var m = date.getMinutes();
             var s = date.getSeconds();
             
