@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Kindle倒计时</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background: #fff;
+        }
+        
+        #countdown {
+            font-size: 72px;
+            margin: 40px 0;
+        }
+        
+        a {
+            display: block;
+            font-size: 36px;
+            color: #000;
+            text-decoration: none;
+            padding: 20px;
+            margin: 20px auto;
+            border: 2px solid #000;
+            width: 200px;
+        }
+        
+        .home-link {
+            margin-top: 60px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div id="countdown">00:00</div>
+    
+    <a href="#" onclick="setTimer(25)">25分钟</a>
+    <a href="#" onclick="setTimer(10)">10分钟</a>
+    <a href="#" onclick="setTimer(5)">5分钟</a>
+    
+    <a href="#" onclick="toggleTimer()">开始/停止</a>
+    
+    <a href="index.html" class="home-link">返回时钟</a>
+
+    <script>
+        var remainingTime = 0;
+        var timerInterval;
+        var isRunning = false;
+
+        function setTimer(minutes) {
+            stopTimer();
+            remainingTime = minutes * 60;
+            updateDisplay();
+        }
+
+        function toggleTimer() {
+            if (remainingTime <= 0) {
+                alert('请先选择时间！');
+                return;
+            }
+            
+            if (isRunning) {
+                stopTimer();
+            } else {
+                startTimer();
+            }
+        }
+
+        function startTimer() {
+            isRunning = true;
+            timerInterval = setInterval(function() {
+                remainingTime--;
+                if (remainingTime < 0) {
+                    stopTimer();
+                    alert('时间到！');
+                    remainingTime = 0;
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 5000);
+                }
+                updateDisplay();
+            }, 1000);
+        }
+
+        function stopTimer() {
+            isRunning = false;
+            clearInterval(timerInterval);
+        }
+
+        function updateDisplay() {
+            var minutes = Math.floor(remainingTime / 60);
+            var seconds = remainingTime % 60;
+            document.getElementById('countdown').textContent = 
+                String(minutes).padStart(2, '0') + ':' + 
+                String(seconds).padStart(2, '0');
+        }
+
+        setTimeout(function() {
+            if (!isRunning) {
+                window.location.reload();
+            }
+        }, 60 * 60 * 1000);
+    </script>
+</body>
+</html> 

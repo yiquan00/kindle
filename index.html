@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Kindle时钟</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background: #fff;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .clock {
+            font-size: 72px;
+            margin: 40px 0;
+        }
+        
+        .date {
+            font-size: 36px;
+            margin-bottom: 60px;
+        }
+        
+        .nav {
+            margin-top: 80px;
+        }
+        
+        .nav a {
+            font-size: 24px;
+            color: #000;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 2px solid #000;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="clock" id="clock">00:00:00</div>
+        <div class="date" id="date">2024年1月1日 星期一</div>
+        
+        <div class="nav">
+            <a href="timer.html">进入倒计时</a>
+        </div>
+    </div>
+
+    <script>
+        function updateClock() {
+            var now = new Date();
+            var hours = String(now.getHours()).padStart(2, '0');
+            var minutes = String(now.getMinutes()).padStart(2, '0');
+            var seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            document.getElementById('clock').textContent = 
+                hours + ':' + minutes + ':' + seconds;
+            
+            var weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+            var dateStr = now.getFullYear() + '年' + 
+                         (now.getMonth() + 1) + '月' + 
+                         now.getDate() + '日 星期' + 
+                         weekdays[now.getDay()];
+            
+            document.getElementById('date').textContent = dateStr;
+        }
+
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // 添加自动刷新功能
+        setTimeout(function() {
+            window.location.reload();
+        }, 30 * 60 * 1000); // 30分钟自动刷新
+    </script>
+</body>
+</html> 
